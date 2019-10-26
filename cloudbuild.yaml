@@ -4,4 +4,14 @@ steps:
     args:
       - '-xc'
       - |
-        docker run --privileged -v /workspace:/workspace docker:stable-dind ./workspace/dind_entry.sh
+        docker run --privileged \
+          -v /workspace:/workspace \
+          --entrypoint /bin/sh \
+          docker:stable-dind \
+            -xc '\
+                apk update && \
+                apk add python3 file util-linux && \
+                dd if=/dev/zero of=/workspace/disk.img count=16 bs=1M && \
+                pip3 install sh && \
+                python3 /workspace/repro.py\
+            '

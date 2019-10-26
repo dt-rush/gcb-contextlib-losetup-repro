@@ -5,11 +5,10 @@ from sh import (
         file,
         losetup
 )
-from time import sleep
 
 IMAGE = "/workspace/disk.img"
 
-print("======================================== beginning repro.py in Dockerfile.inner container run by docker-dind in GCB")
+print("======================================== beginning repro.py")
 
 @contextmanager
 def losetup_ctxmgr():
