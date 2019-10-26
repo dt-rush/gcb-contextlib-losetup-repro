@@ -1,0 +1,7 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: '/bin/sh'
+    args:
+      - '-xc'
+      - |
+        docker run --privileged -v /workspace:/workspace docker:stable-dind ./workspace/dind_entry.sh
