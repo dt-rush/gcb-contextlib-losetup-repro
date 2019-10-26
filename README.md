@@ -1,3 +1,19 @@
+Calling a `contextlib.contextmanager`-annotated function which runs `losetup` / `losetup -d` (on teardown), twice in a row, will cause a `Resource temporarily unavailable` error on GCB kernel (as of this writing). It's non-deterministic, succeeding sometimes.
+
+The contextmanager:
+
+```
+@contextmanager
+def losetup_ctxmgr():
+    args = ["-f", "--show", "--offset", "0", "--sizelimit", "50000000000"]
+    args.append(IMAGE)
+    device = losetup(*args).stdout.decode("utf8").strip()
+    yield device
+    losetup("-d", device)
+```
+
+The relevant build output:
+
 ```
 ======================================== beginning repro.py in Dockerfile.inner container run by docker-dind in GCB
 Traceback (most recent call last):
@@ -17,7 +33,7 @@ Traceback (most recent call last):
     self.handle_command_exit_code(exit_code)
   File "/usr/lib/python3.7/site-packages/sh.py", line 815, in handle_command_exit_code
     raise exc
-sh.ErrorReturnCode_1: 
+sh.ErrorReturnCode_1:
 
   RAN: /sbin/losetup -f --show --offset 0 --sizelimit 50000000000 /workspace/disk.img
 
