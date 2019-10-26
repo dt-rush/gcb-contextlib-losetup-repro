@@ -5,8 +5,7 @@ The contextmanager:
 ```
 @contextmanager
 def losetup_ctxmgr():
-    args = ["-f", "--show", "--offset", "0", "--sizelimit", "50000000000"]
-    args.append(IMAGE)
+    args = ["-f", "--show", "--offset", "0", "--sizelimit", "50000000000", IMAGE]
     device = losetup(*args).stdout.decode("utf8").strip()
     yield device
     losetup("-d", device)
